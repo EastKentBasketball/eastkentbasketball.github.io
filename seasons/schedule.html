@@ -32,6 +32,10 @@ docReady(function () {
 	}
 	arrAdjust(z);
 });
-
+function forceLeagueRefresh(){
+	setLocal("LeagueTable", "01-01-2000");	
+	setLocal("ResultsTable", "01-01-2000");
+	arrAdjust(z);
+}
 </script>
 <div id="toastyContainer"></div>
