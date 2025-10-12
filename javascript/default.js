@@ -10,11 +10,7 @@ var testpostsJSON = "{% assign sorted_posts = site.posts | sort:"url" %}{% for x
 
 
 const _maxDaysForSubmission = 1000*60*60*24*4;
-function forceLeagueRefresh(){
-	setLocal("LeagueTable", "01-01-2000");	
-	setLocal("ResultsTable", "01-01-2000");
-	arrAdjust(z);
-}
+
 
 function timestampToDateObj(str){
 	var datearr = str.split(" ")[0].split("/");
