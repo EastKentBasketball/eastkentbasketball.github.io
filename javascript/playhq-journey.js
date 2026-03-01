@@ -22,6 +22,7 @@ const ekbaAssocID = 'a2203749-8d10-4a45-ba58-fa1c7ce13f6c';
     #app pre.json { background:#222; color:#ddd; padding:12px; border-radius:6px; overflow:auto; max-height:360px; font-size:12px; }
     #app .small { font-size:13px; color:#ddd; }
     #app .muted { color:#ddd; font-size:13px; }
+    #app table{background:#133}
   `;
   const s = document.createElement('style');
   s.textContent = css;
