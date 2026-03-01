@@ -205,7 +205,11 @@ async function loadFixtures(gradeId, gradeName) {
       </div>
     `;
     const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"col":"url","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"dateTime","type":"date"}]};
-	arrAdjust(z);
+    if(fixtures.length > 0){
+    	arrAdjust(z);
+    } else {
+      document.getElementById('json-output').innerHTML = '<p class="muted small">No schedule data available.</p>';
+    }
     //document.getElementById('json-output').innerHTML = JSON.stringify(fixtures, null, 2);
   } catch (err) {
     renderError(err.message || String(err));
@@ -230,13 +234,17 @@ async function loadLadder(gradeId, gradeName) {
           <button class="secondary" onclick="selectSeasonFromGrade('${gradeId}')">Back to Grades</button>
           <button class="ghost" onclick="resetAll()">Reset</button>
         </div>
-        <p class="muted small">Full ladder object is logged to console and shown below. Use this raw object for your own display logic.</p>
+        <p class="muted small"></p>
         <div class="json" id="json-output"></div>
       </div>
     `;
 
     const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":[{"col":"percentage","hide":"1"},{"col":"adjustments","hide":"1"},{"col":"pointsFor","hide":"1"},{"col":"pointsAgainst","hide":"1"},{"col":"forfeits","hide":"1"},{"col":"disqualifications","hide":"1"}]};
-	arrAdjust(z);
+    if(ladder.length > 0){
+    	arrAdjust(z);
+    } else {
+      document.getElementById('json-output').innerHTML = '<p class="muted small">No results data available.</p>';
+    }
     //document.getElementById('json-output').innerHTML = JSON.stringify(ladder, null, 2);
   } catch (err) {
     renderError(err.message || String(err));
