@@ -235,15 +235,15 @@ async function loadLadder(gradeId, gradeName) {
           <button class="ghost" onclick="resetAll()">Reset</button>
         </div>
         <p class="muted small"></p>
-        <div class="json" id="json-output"></div>
+        <div class="json" id="json-results"></div>
       </div>
     `;
 
-    const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":[{"col":"percentage","hide":"1"},{"col":"adjustments","hide":"1"},{"col":"pointsFor","hide":"1"},{"col":"pointsAgainst","hide":"1"},{"col":"forfeits","hide":"1"},{"col":"disqualifications","hide":"1"}]};
+    const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-results","display":"table-break","colData":[{"col":"percentage","hide":"1"},{"col":"adjustments","hide":"1"},{"col":"pointsFor","hide":"1"},{"col":"pointsAgainst","hide":"1"},{"col":"forfeits","hide":"1"},{"col":"disqualifications","hide":"1"}]};
     if(ladder.length > 0){
     	arrAdjust(z);
     } else {
-      document.getElementById('json-output').innerHTML = '<p class="muted small">No results data available.</p>';
+      document.getElementById('json-results').innerHTML = '<p class="muted small">No results data available.</p>';
     }
     //document.getElementById('json-output').innerHTML = JSON.stringify(ladder, null, 2);
   } catch (err) {
