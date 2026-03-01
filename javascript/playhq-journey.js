@@ -234,7 +234,7 @@ async function loadLadder(gradeId, gradeName) {
       </div>
     `;
 
-    const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break"};
+    const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":[{"col":"percentage","hide":"1"},{"col":"adjustments","hide":"1"},{"col":"pointsFor","hide":"1"},{"col":"pointsAgainst","hide":"1"},{"col":"forfeits","hide":"1"},{"col":"disqualifications","hide":"1"}]};
 	arrAdjust(z);
     //document.getElementById('json-output').innerHTML = JSON.stringify(ladder, null, 2);
   } catch (err) {
