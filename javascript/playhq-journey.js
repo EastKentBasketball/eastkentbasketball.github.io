@@ -99,6 +99,59 @@ async function getAllPlayHQData(type, id = "") {
   return data;
 }
 
+/**
+ * Fetches all grades for a season, fetches fixtures for each grade,
+ * flattens each schedule, and returns a combined array.
+ *
+ * @param {string} seasonId - The PlayHQ season ID
+ * @returns {Promise<Array>} - Flat array of all games across all grades
+ */
+async function renderAllGradesSchedule(seasonId, seasonName="Season") {
+  renderLoading(`${seasonName} — Season Schedule`);
+  const all = [];
+
+  // 1. Get all grades for the season
+  const grades = await getAllPlayHQData("grades", seasonId);
+
+  // 2. Loop through each grade and fetch fixtures
+  for (const grade of grades) {
+    const fixtures = await getAllPlayHQData("fixtures", grade.id);
+
+    // 3. Flatten schedule for this grade
+    const flat = flattenSchedule(fixtures).map(g => ({
+      ...g,
+      gradeId: grade.id,
+      gradeName: grade.name
+    }));
+
+    // 4. Add to master list
+    all.push(...flat);
+  }
+
+    lastReturnedObject = all;
+    localStorage.setItem("playhq-data", JSON.stringify(all));
+    console.log('Fixtures object:', all);
+
+         // <button class="secondary" onclick="showLastReturned()">Show last returned object</button>
+    app.innerHTML = `
+      <div class="panel">
+        <h2>${escapeHtml(seasonName)} — Schedule</h2>
+        <div class="controls">
+          <button class="secondary" onclick="renderSeasons()">Seasons</button>
+          <button class="ghost" onclick="resetAll()">Reset</button>
+        </div>
+        <p class="muted small"></p>
+        <div class="json" id="json-output"></div>
+      </div>
+    `;
+    if(all.length > 0){
+    	arrAdjust(gradesSettings);
+    } else {
+      document.getElementById('json-output').innerHTML = '<p class="muted small">No schedule data available.</p>';
+    }
+  return all;
+}
+
 /* UI RENDERING */
 function renderLoading(title = 'Loading…') {
   app.innerHTML = `<div class="panel"><h2>${title}</h2><p class="muted">Please wait</p></div>`;
@@ -137,7 +190,8 @@ async function renderSeasons() {
     `;
 
     const ul = document.getElementById('season-list');
-    ul.innerHTML = seasons.map(s => `<li><button onclick='selectSeason("${s.id}", "${escapeHtml(s.name)}")'>${escapeHtml(s.name)}</button></li>`).join('');
+    ul.innerHTML = seasons.map(s => `<li><button onclick='selectSeason("${s.id}", "${escapeHtml(s.name)}")'>${escapeHtml(s.name)}</button>
+    <button onclick='renderAllGradesSchedule("${s.id}")'>${escapeHtml(s.name)} All Games</button></li>`).join('');
   } catch (err) {
     renderError(err.message || String(err));
   }
@@ -181,7 +235,8 @@ async function selectSeason(seasonId, seasonName) {
     renderError(err.message || String(err));
   }
 }
-
+ const gradesSettings = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"custom":1,"col":"Team","cols":["homeTeamName","awayTeamName"],"filter":"cols-dropdown"},{"col":"url","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"dateTime","type":"date"}]};
+   
 /* LOAD FIXTURES: returns full fixtures object (raw) */
 async function loadFixtures(gradeId, gradeName) {
   renderLoading(`${gradeName} — Schedule`);
@@ -204,9 +259,8 @@ async function loadFixtures(gradeId, gradeName) {
         <div class="json" id="json-output"></div>
       </div>
     `;
-    const z = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"col":"url","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"dateTime","type":"date"}]};
     if(fixtures.length > 0){
-    	arrAdjust(z);
+    	arrAdjust(gradesSettings);
     } else {
       document.getElementById('json-output').innerHTML = '<p class="muted small">No schedule data available.</p>';
     }
