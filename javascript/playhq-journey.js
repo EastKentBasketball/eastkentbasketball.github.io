@@ -120,7 +120,7 @@ async function renderAllGradesSchedule(seasonId, seasonName="Season") {
     // 3. Flatten schedule for this grade
     const flat = flattenSchedule(fixtures).map(g => ({
       ...g,
-      gradeId: grade.id,
+      //gradeId: grade.id,
       gradeName: grade.name
     }));
 
