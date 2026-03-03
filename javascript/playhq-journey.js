@@ -479,7 +479,7 @@ function flattenSchedule(api) {
         Away: awayName,
 
         // Results (flat)
-        Score: `${homeScore} - ${awayScore}`,
+        Score: (homeScore !== null && awayScore !== null) ? `${homeScore} - ${awayScore}` : "-",
         Winner: (winner === homeName ? "Home" : (winner === awayName ? "Away" : winner))
       });
     }
