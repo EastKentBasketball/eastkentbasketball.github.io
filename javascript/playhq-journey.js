@@ -235,7 +235,7 @@ async function selectSeason(seasonId, seasonName) {
     renderError(err.message || String(err));
   }
 }
- const gradesSettings = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"custom":1,"col":"Team","cols":["homeTeamName","awayTeamName"],"filter":"cols-dropdown"},{"col":"url","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"dateTime","type":"date"}]};
+ const gradesSettings = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"custom":1,"col":"Team","cols":["homeTeamName","awayTeamName"],"filter":"cols-dropdown"},{"col":"PlayHQ","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"Date","type":"date"}]};
    
 /* LOAD FIXTURES: returns full fixtures object (raw) */
 async function loadFixtures(gradeId, gradeName) {
@@ -370,10 +370,10 @@ function flattenLadders(ladderObj) {
 
         // team identity
         //teamId: row.team?.id ?? null,
-        teamName: row.team?.name ?? null,
+        Team: row.team?.name ?? null,
 
         // position (1-based)
-        position: idx + 1,
+        Rank: idx + 1,
 
         // keep original values array for reference
         //rawValues: Array.isArray(row.values) ? row.values.slice() : []
@@ -463,25 +463,24 @@ function flattenSchedule(api) {
         //gameId: game.id,
         status: game.status,
         //type: game.type,
-        url: game.url,
+        PlayHQ: game.url,
         //createdAt: game.createdAt,
         //updatedAt: game.updatedAt,
 
         // Schedule
-        dateTime: sched?.dateTime ?? null,
+        Date: sched?.dateTime ?? null,
         //playingSurfaceId: sched?.playingSurfaceId ?? null,
         playingSurfaceName: courtName,
 
         // Teams
         //homeTeamId: homeTeam.id,
-        homeTeamName: homeName,
+        Home: homeName,
         //awayTeamId: awayTeam.id,
-        awayTeamName: awayName,
+        Away: awayName,
 
         // Results (flat)
-        homeScore,
-        awayScore,
-        winner: (winner === homeName ? "Home" : (winner === awayName ? "Away" : winner))
+        Score: `${homeScore} - ${awayScore}`,
+        Winner: (winner === homeName ? "Home" : (winner === awayName ? "Away" : winner))
       });
     }
   }
