@@ -121,7 +121,7 @@ async function renderAllGradesSchedule(seasonId, seasonName="Season") {
     const flat = flattenSchedule(fixtures).map(g => ({
       ...g,
       //gradeId: grade.id,
-      gradeName: grade.name
+      Grade: grade.name
     }));
 
     // 4. Add to master list
