@@ -235,7 +235,7 @@ async function selectSeason(seasonId, seasonName) {
     renderError(err.message || String(err));
   }
 }
- const gradesSettings = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"custom":1,"col":"Team","cols":["homeTeamName","awayTeamName"],"filter":"cols-dropdown"},{"col":"PlayHQ","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"Date","type":"date"}]};
+ const gradesSettings = {"page":[1,250],"getArrFunction":"showLastReturned","id":"json-output","display":"table-break","colData":["filter",{"custom":1,"col":"Team","cols":["Home","Away"],"filter":"cols-dropdown"},{"col":"PlayHQ","type":"masked-url"},{"col":"playingSurfaceName","hide":"2"},{"col":"roundName","hide":"2"},{"col":"status","hide":"2","filter":"dropdown"},{"col":"Date","type":"date"}]};
    
 /* LOAD FIXTURES: returns full fixtures object (raw) */
 async function loadFixtures(gradeId, gradeName) {
