@@ -276,7 +276,7 @@ async function loadLadder(gradeId, gradeName) {
   try {
     let ladder = flattenLadders( await getAllPlayHQData('ladders', gradeId));
     if (ladder.length === 0) {
-      let ladder = buildLeagueTable(flattenSchedule(await getAllPlayHQData('fixtures', gradeId)));
+      ladder = buildLeagueTable(flattenSchedule(await getAllPlayHQData('fixtures', gradeId)));
     }
     lastReturnedObject = ladder;
     localStorage.setItem("playhq-data", JSON.stringify(ladder));
