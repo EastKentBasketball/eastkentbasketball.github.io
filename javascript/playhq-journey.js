@@ -556,25 +556,23 @@ function buildLeagueTable(games, {
       table[Home].won++;
       table[Away].lost++;
       table[Home].leaguePoints += pointsForWin;
-      table[Away].leaguePoints += pointsForLoss;
+      table[Away].leaguePoints += Score === "Forfeit" ? pointsForForfeit : pointsForLoss;
+      if(Score === "Forfeit") {
+        table[Away].forfeit++;
+      }
     } else if (Winner === "Away") {
       table[Away].won++;
       table[Home].lost++;
       table[Away].leaguePoints += pointsForWin;
-      table[Home].leaguePoints += pointsForLoss;
+      table[Home].leaguePoints += Score === "Forfeit" ? pointsForForfeit : pointsForLoss;
+      if(Score === "Forfeit") {
+        table[Home].forfeit++;
+      }
     } else if (Winner === "Draw") {
       table[Home].draw++;
       table[Away].draw++;
       table[Home].leaguePoints += pointsForDraw;
       table[Away].leaguePoints += pointsForDraw;
-    } else if (Winner === "Forfeit-Home") {
-      table[Away].forfeit++;
-      table[Home].won++;
-      table[Home].leaguePoints += pointsForForfeit;
-    } else if (Winner === "Forfeit-Away") {
-      table[Home].forfeit++;
-      table[Away].won++;
-      table[Away].leaguePoints += pointsForForfeit;
     }
   }
 
