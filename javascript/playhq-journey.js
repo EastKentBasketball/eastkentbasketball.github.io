@@ -274,7 +274,10 @@ async function loadFixtures(gradeId, gradeName) {
 async function loadLadder(gradeId, gradeName) {
   renderLoading(`${gradeName} — Results`);
   try {
-    const ladder = flattenLadders( await getAllPlayHQData('ladders', gradeId));
+    let ladder = flattenLadders( await getAllPlayHQData('ladders', gradeId));
+    if (ladder.length === 0) {
+      let ladder = buildLeagueTable(flattenSchedule(await getAllPlayHQData('fixtures', gradeId)));
+    }
     lastReturnedObject = ladder;
     localStorage.setItem("playhq-data", JSON.stringify(ladder));
     console.log('Ladder object:', ladder);
@@ -488,6 +491,94 @@ function flattenSchedule(api) {
   return flat;
 }
 
+
+function buildLeagueTable(games, {
+  pointsForWin = 3,
+  pointsForLoss = 1,
+  pointsForDraw = 1,
+  pointsForForfeit = 0
+} = {}) {
+
+  const table = {};
+
+  const ensureTeam = (team) => {
+    if (!table[team]) {
+      table[team] = {
+        team,
+        games: 0,
+        won: 0,
+        lost: 0,
+        draw: 0,
+        forfeit: 0,
+        pointsFor: 0,
+        pointsAgainst: 0,
+        pointDifference: 0,
+        leaguePoints: 0
+      };
+    }
+  };
+
+  for (const game of games) {
+    const { Home, Away, Score, Winner, status } = game;
+
+    ensureTeam(Home);
+    ensureTeam(Away);
+
+    // Only count completed games
+    if (status !== "FINAL") continue;
+
+    table[Home].games++;
+    table[Away].games++;
+
+    // Parse score "56 - 54"
+    let homeScore = 0;
+    let awayScore = 0;
+
+    if (Score && Score.includes("-")) {
+      const [h, a] = Score.split("-").map(s => parseInt(s.trim(), 10));
+      homeScore = h;
+      awayScore = a;
+    }
+
+    table[Home].pointsFor += homeScore;
+    table[Home].pointsAgainst += awayScore;
+    table[Away].pointsFor += awayScore;
+    table[Away].pointsAgainst += homeScore;
+
+    // Determine result
+    if (Winner === "Home") {
+      table[Home].won++;
+      table[Away].lost++;
+      table[Home].leaguePoints += pointsForWin;
+      table[Away].leaguePoints += pointsForLoss;
+    } else if (Winner === "Away") {
+      table[Away].won++;
+      table[Home].lost++;
+      table[Away].leaguePoints += pointsForWin;
+      table[Home].leaguePoints += pointsForLoss;
+    } else if (Winner === "Draw") {
+      table[Home].draw++;
+      table[Away].draw++;
+      table[Home].leaguePoints += pointsForDraw;
+      table[Away].leaguePoints += pointsForDraw;
+    } else if (Winner === "Forfeit-Home") {
+      table[Away].forfeit++;
+      table[Home].won++;
+      table[Home].leaguePoints += pointsForForfeit;
+    } else if (Winner === "Forfeit-Away") {
+      table[Home].forfeit++;
+      table[Away].won++;
+      table[Away].leaguePoints += pointsForForfeit;
+    }
+  }
+
+  // Final calculations
+  for (const team of Object.values(table)) {
+    team.pointDifference = team.pointsFor - team.pointsAgainst;
+  }
+
+  return Object.values(table);
+}
 /* Expose a couple of functions to global scope for inline onclick handlers */
 window.renderSeasons = renderSeasons;
 window.selectSeason = selectSeason;
