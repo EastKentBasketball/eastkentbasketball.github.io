@@ -437,8 +437,8 @@ function flattenSchedule(api) {
       if (game.status === "FINAL"){// && game.match?.teams) {
         homeForfeit = (game.teams.find(t => t.id === homeTeam.id)?.outcome ?? null) === "WON_BY_FORFEIT";
         awayForfeit = (game.teams.find(t => t.id === awayTeam.id)?.outcome ?? null) === "WON_BY_FORFEIT";
-        if(homeForfeit && (winner = awayName));
-        if(awayForfeit && (winner = homeName));
+        if(homeForfeit && (winner = homeName));
+        if(awayForfeit && (winner = awayName));
         if(game.match?.teams) {
           const homeMatch = game.match.teams.find(t => t.id === homeTeam.id);
           const awayMatch = game.match.teams.find(t => t.id === awayTeam.id);
