@@ -435,27 +435,29 @@ function flattenSchedule(api) {
       let homeForfeit = false;
       let awayForfeit = false;
       if (game.status === "FINAL"){// && game.match?.teams) {
-        const homeMatch = game.match.teams.find(t => t.id === homeTeam.id);
-        const awayMatch = game.match.teams.find(t => t.id === awayTeam.id);
         homeForfeit = (game.teams.find(t => t.id === homeTeam.id)?.outcome ?? null) === "WON_BY_FORFEIT";
         awayForfeit = (game.teams.find(t => t.id === awayTeam.id)?.outcome ?? null) === "WON_BY_FORFEIT";
         if(homeForfeit && (winner = awayName));
         if(awayForfeit && (winner = homeName));
-        homeScore =
-          homeMatch?.outcome?.statistics?.find(s => s.type === "TOTAL_SCORE")
-            ?.value ?? null;
+        if(game.match?.teams) {
+          const homeMatch = game.match.teams.find(t => t.id === homeTeam.id);
+          const awayMatch = game.match.teams.find(t => t.id === awayTeam.id);
+          homeScore =
+            homeMatch?.outcome?.statistics?.find(s => s.type === "TOTAL_SCORE")
+              ?.value ?? null;
 
-        awayScore =
-          awayMatch?.outcome?.statistics?.find(s => s.type === "TOTAL_SCORE")
-            ?.value ?? null;
+          awayScore =
+            awayMatch?.outcome?.statistics?.find(s => s.type === "TOTAL_SCORE")
+              ?.value ?? null;
 
-        if (homeScore != null && awayScore != null) {
-          winner =
-            homeScore > awayScore
-              ? homeName
-              : awayScore > homeScore
-              ? awayName
-              : "Draw";
+          if (homeScore != null && awayScore != null) {
+            winner =
+              homeScore > awayScore
+                ? homeName
+                : awayScore > homeScore
+                ? awayName
+                : "Draw";
+          }
         }
       }
       const forfeitStatus = homeForfeit || awayForfeit;
