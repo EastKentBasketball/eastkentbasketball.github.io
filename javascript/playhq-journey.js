@@ -432,11 +432,15 @@ function flattenSchedule(api) {
       let homeScore = null;
       let awayScore = null;
       let winner = null;
-
-      if (game.status === "FINAL" && game.match?.teams) {
+      let homeForfeit = false;
+      let awayForfeit = false;
+      if (game.status === "FINAL"){// && game.match?.teams) {
         const homeMatch = game.match.teams.find(t => t.id === homeTeam.id);
         const awayMatch = game.match.teams.find(t => t.id === awayTeam.id);
-
+        homeForfeit = (game.teams.find(t => t.id === homeTeam.id)?.outcome ?? null) === "WON_BY_FORFEIT";
+        awayForfeit = (game.teams.find(t => t.id === awayTeam.id)?.outcome ?? null) === "WON_BY_FORFEIT";
+        if(homeForfeit && (winner = awayName));
+        if(awayForfeit && (winner = homeName));
         homeScore =
           homeMatch?.outcome?.statistics?.find(s => s.type === "TOTAL_SCORE")
             ?.value ?? null;
@@ -454,7 +458,7 @@ function flattenSchedule(api) {
               : "Draw";
         }
       }
-
+      const forfeitStatus = homeForfeit || awayForfeit;
       // Build flat object
       flat.push({
         // Round info
@@ -482,7 +486,7 @@ function flattenSchedule(api) {
         Away: awayName,
 
         // Results (flat)
-        Score: (homeScore !== null && awayScore !== null) ? `${homeScore} - ${awayScore}` : "-",
+        Score: (homeScore !== null && awayScore !== null) ? `${homeScore} - ${awayScore}` : ( forfeitStatus ? "Forfeit" : "-" ),
         Winner: (winner === homeName ? "Home" : (winner === awayName ? "Away" : winner))
       });
     }
